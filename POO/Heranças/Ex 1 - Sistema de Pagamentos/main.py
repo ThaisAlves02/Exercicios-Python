@@ -1,0 +1,2 @@
+from classPagamento import Pagamento
+
