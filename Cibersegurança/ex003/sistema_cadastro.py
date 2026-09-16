@@ -63,14 +63,10 @@ def fazer_login():
                 senha_hash = hashlib.sha256(senha_bytes).hexdigest()
 
                 if not nome_usuario in lista_usuarios[nome_usuario] and senha in lista_usuarios[nome_usuario]["senha"] == senha_hash:
-                    print("Usuário e senha inexistentes!")
-
-
-                if not nome_usuario in lista_usuarios[nome_usuario] and senha in lista_usuarios[nome_usuario]["senha"] == senha_hash:
                     print("Usuário não cadastrado ou senha incorreta.")
                     tentativas += 1
                 
-                    lista_usuarios["tentativas"] = tentativas
+                    lista_usuarios.get(tentativas)
                     with open(ARQUIVO_USUARIOS, "w", encoding="utf-8") as arquivo:
                         json.dump(lista_usuarios, arquivo, indent=4)
                     
