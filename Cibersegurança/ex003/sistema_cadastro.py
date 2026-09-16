@@ -50,6 +50,8 @@ def cadastrar_usuario():
         print(f"Usuário '{nome_usuario}' cadastrado com sucesso!")
 
 def fazer_login():
+    usuario_inexistente = 0
+
     while True:
             nome_usuario = input("Usuário: ")
             senha = input("Senha: ")
@@ -81,7 +83,11 @@ def fazer_login():
                      with open(ARQUIVO_USUARIOS, "w", encoding="utf-8") as arquivo:
                        json.dump(lista_usuarios, arquivo, indent=4)    
             else:
-                print("Usuário não cadastrado ou incorreto!")  
+                print("Usuário não cadastrado ou incorreto!") 
+                usuario_inexistente += 1
+
+                if usuario_inexistente >= 3:
+                    break
 #-----------------------------------------------------------------
 # MENU INTERATIVO
 #-----------------------------------------------------------------
