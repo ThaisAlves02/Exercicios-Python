@@ -54,31 +54,34 @@ def fazer_login():
             nome_usuario = input("Usuário: ")
             senha = input("Senha: ")
 
-            if tentativas >= 3:
-                print("Você errou 3 vezes, acesso bloqueado!")
-                break
+            if nome_usuario in lista_usuarios:
+                # 1. Pega os dados e as tentativas do usuário
+                dados_usuario = lista_usuarios.get(nome_usuario, {})
+                tentativas = dados_usuario.get("tentativas", 0)
 
-            else:
+                if tentativas >= 3:
+                    print("Você errou 3 vezes, acesso bloqueado!")
+                    break
+                                
                 senha_bytes = senha.encode("utf-8")
                 senha_hash = hashlib.sha256(senha_bytes).hexdigest()
+                                    
+                if dados_usuario["senha"] == senha_hash:
+                     print(f"Login bem sucedido! Usuário conectado: {nome_usuario}")
 
-                if not nome_usuario in lista_usuarios[nome_usuario] and senha in lista_usuarios[nome_usuario]["senha"] == senha_hash:
-                    print("Usuário não cadastrado ou senha incorreta.")
-                    tentativas += 1
-                
-                    lista_usuarios.get(tentativas)
-                    with open(ARQUIVO_USUARIOS, "w", encoding="utf-8") as arquivo:
+                     dados_usuario["tentativas"] = 0
+                     with open(ARQUIVO_USUARIOS, "w", encoding="utf-8") as arquivo:
                         json.dump(lista_usuarios, arquivo, indent=4)
-                    
-
-                if nome_usuario in lista_usuarios and lista_usuarios[nome_usuario]["senha"] == senha_hash:
-                    print(f"Login bem sucedido! Usuário conectado: {nome_usuario}")
-
-                    lista_usuarios["tentativas"] = 0
-                    with open(ARQUIVO_USUARIOS, "w", encoding="utf-8") as arquivo:
-                        json.dump(lista_usuarios, arquivo, indent=4)
-                    break
-                        
+                     break
+                else:
+                     print(f"Usuário não cadastrado ou incorreto!")
+                     tentativas += 1
+                                
+                     dados_usuario["tentativas"] = tentativas
+                     with open(ARQUIVO_USUARIOS, "w", encoding="utf-8") as arquivo:
+                       json.dump(lista_usuarios, arquivo, indent=4)    
+            else:
+                print("Usuário não cadastrado ou incorreto!")  
 #-----------------------------------------------------------------
 # MENU INTERATIVO
 #-----------------------------------------------------------------
